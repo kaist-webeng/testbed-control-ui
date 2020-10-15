@@ -1,25 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+import ControlArray from './ControlArray';
 
 function App() {
+  const [descriptions, setDescriptions] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchDescriptions = async () => {
+      try {
+        setDescriptions(null);
+        setIsLoading(true);
+        setError(null);
+
+        // Retrieve descriptions from the registry server.
+        const response = await axios.get(
+          'http://server.seiker.kr:8000/api/services/'
+        );
+        setDescriptions(response.data);
+      } catch (e) {
+        setError(e);
+      }
+      setIsLoading(false);
+    };
+
+    fetchDescriptions();
+  }, []);
+
+  if (isLoading)
+    return <div>Loading descriptions...</div>;
+  
+  if (error)
+    return <div style={{color: "red"}}>Failed to retrieve descriptions.</div>;
+
+  if (!descriptions)
+    return <div>There is nothing to show...</div>;
+
+  // Render the loaded data.
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <ControlArray descriptions={descriptions} />
+    </>
   );
 }
 
