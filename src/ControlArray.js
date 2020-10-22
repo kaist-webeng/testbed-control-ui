@@ -11,18 +11,29 @@ const Control = React.memo(function Control({ desc }) {
     return (
       <>
         <h2>{title}</h2>
-        <h4>{description}</h4>
+        <h3>{description}</h3>
         <a href={url}>{url}</a>
-        {Object.keys(properties).map(key => (
-          // TODO: 추후 Action 호출기능이 생기면 property를 리렌더링하는 것이 필요.
-          <Property 
-            prop={properties[key]} 
-            url={url}
-            key={key} />
-        ))}
-        {Object.keys(actions).map(key => (
-          <Action action={actions[key]} key={key} />
-        ))}
+        <h3>Properties</h3>
+        <div className="container">
+          {Object.keys(properties).map(key => (
+            // TODO: 추후 Action 호출기능이 생기면 property를 리렌더링하는 것이 필요.
+            <Property 
+              prop={properties[key]} 
+              url={url}
+              key={key}
+            />
+          ))}
+        </div>
+        <h3>Actions</h3>
+        <div className="container">
+          {Object.keys(actions).map(key => (
+            <Action
+              action={actions[key]}
+              url={url}
+              key={key}
+            />
+          ))}
+        </div>
       </>
     )
 

@@ -55,22 +55,21 @@ function Property({ prop, url }) {
 
   // Render the loaded data.
   if (isLoading)
-    return <div>Loading properties...</div>;
+    return <div className="item">Loading current property values...</div>;
 
   if (error) {
     console.error(error);
-    return <div style={{color: "red"}}>Failed to retrieve properties from the resource.</div>;
+    return <div className="item" style={{color: "red"}}>Failed to retrieve properties from the resource.</div>;
   }
 
   if (!properties)
     return (
-      <div style={{color: "red"}}>Required property 'properties' is missing in the description.</div>
+      <div className="item" style={{color: "red"}}>Required property 'properties' is missing in the description.</div>
     )
 
   return (
-    <div style={{border: "1px solid black",
-                 margin: "10px 5px 10px 5px"}}>
-      <h5>{title}</h5>
+    <div className="item">
+      <h4>{title}</h4>
       <div>{description}</div>
       <ul>{
         !type.localeCompare('object') ? 
