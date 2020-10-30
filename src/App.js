@@ -30,19 +30,19 @@ function App() {
   }, []);
 
   if (isLoading)
-    return <div>Loading descriptions...</div>;
+    return <div className="loading vertical-center">Loading descriptions...</div>;
   
   if (error)
-    return <div style={{color: "red"}}>Failed to retrieve descriptions.</div>;
+    return <div className="loading vertical-center" style={{color: "red"}}>Failed to retrieve descriptions.</div>;
 
   if (!descriptions)
     return <div>There is nothing to show...</div>;
 
   // Render the loaded data.
   return (
-    <>
+    <body>
       <ControlArray descriptions={descriptions} />
-    </>
+    </body>
   );
 }
 

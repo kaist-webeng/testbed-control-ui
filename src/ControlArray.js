@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Property from './Property';
 import Action from './Action';
@@ -6,6 +6,8 @@ import Action from './Action';
 const Control = React.memo(function Control({ desc }) {
   const descObject = JSON.parse(desc);
   const { title, url, description, properties, actions } = descObject;
+
+  const [needRefresh, setNeedRefresh] = useState(false);
 
   if (title && url && description && properties && actions)
     return (
@@ -16,11 +18,12 @@ const Control = React.memo(function Control({ desc }) {
         <h3>Properties</h3>
         <div className="container">
           {Object.keys(properties).map(key => (
-            // TODO: 추후 Action 호출기능이 생기면 property를 리렌더링하는 것이 필요.
             <Property 
               prop={properties[key]} 
               url={url}
               key={key}
+              needRefresh={needRefresh}
+              setNeedRefresh={setNeedRefresh}
             />
           ))}
         </div>
@@ -31,6 +34,8 @@ const Control = React.memo(function Control({ desc }) {
               action={actions[key]}
               url={url}
               key={key}
+              needRefresh={needRefresh}
+              setNeedRefresh={setNeedRefresh}
             />
           ))}
         </div>

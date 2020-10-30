@@ -12,7 +12,7 @@ function PropertyElement({ element, value }) {
   )
 }
 
-function Property({ prop, url }) {
+function Property({ prop, url, needRefresh, setNeedRefresh }) {
   const { title, type, description, properties, forms } = prop;
 
   // Retrieve property values from the resource.
@@ -51,15 +51,16 @@ function Property({ prop, url }) {
     };
 
     fetchValues();
-  }, [forms, url]);
+    setNeedRefresh(false);
+  }, [forms, url, stateUrl, needRefresh, setNeedRefresh]);
 
   // Render the loaded data.
   if (isLoading)
-    return <div className="item">Loading current property values...</div>;
+    return <div className="item loading">Loading current property values...</div>;
 
   if (error) {
     console.error(error);
-    return <div className="item" style={{color: "red"}}>Failed to retrieve properties from the resource.</div>;
+    return <div className="item loading" style={{color: "red", justifyContent: "center"}}>Failed to retrieve properties from the resource.</div>;
   }
 
   if (!properties)

@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import { bind, unbind } from './Ownership';
 
-function Action({ action, url }) {
+function Action({ action, url, setNeedRefresh }) {
   const { title, description, input, forms } = action;
 
   const onSubmit = event => {
@@ -14,7 +14,7 @@ function Action({ action, url }) {
       console.log(boundStatus);
 
       if (!boundStatus) {
-        const response = await axios({
+        await axios({
           method: 'post',
           url: forms[0].href,
           headers: { 'USER-ID': '7747' }
@@ -24,13 +24,14 @@ function Action({ action, url }) {
       }
     }
     submitAction();
+    setNeedRefresh(true);
   }
 
   return (
     <div className="item">
       <h4>{title}</h4>
       <div>{description}</div>
-      <form onSubmit={onSubmit}>
+      <form className="center" onSubmit={onSubmit}>
         {input && <div style={{color: "red"}}>Sorry, currently input forms are not supported.</div>}
         <input type="submit" value="Submit" />
       </form>
