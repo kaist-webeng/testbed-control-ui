@@ -5,39 +5,47 @@ import Action from './Action';
 
 const Control = React.memo(function Control({ desc }) {
   const descObject = JSON.parse(desc);
-  const { title, url, description, properties, actions } = descObject;
-
+  const { id, title, url, description, properties, actions } = descObject;
   const [needRefresh, setNeedRefresh] = useState(false);
+  const [display, setDisplay] = useState(false);
+
+  const onClick = event => {
+    setDisplay((prevDisplay) => !prevDisplay);
+  };
 
   if (title && url && description && properties && actions)
     return (
       <>
-        <h2>{title}</h2>
-        <h3>{description}</h3>
-        <a href={url}>{url}</a>
-        <h3>Properties</h3>
-        <div className="container">
-          {Object.keys(properties).map(key => (
-            <Property 
-              prop={properties[key]} 
-              url={url}
-              key={key}
-              needRefresh={needRefresh}
-              setNeedRefresh={setNeedRefresh}
-            />
-          ))}
+        <h2 onClick={onClick}>{title}</h2>
+        <div className="desc-url-wrapper">
+          <p className="resource-desc">{description}</p>
+          <a href={url}>{url}</a>
         </div>
-        <h3>Actions</h3>
-        <div className="container">
-          {Object.keys(actions).map(key => (
-            <Action
-              action={actions[key]}
-              url={url}
-              key={key}
-              needRefresh={needRefresh}
-              setNeedRefresh={setNeedRefresh}
-            />
-          ))}
+        <div className="control-panel" id={id} style={{display: display ? "block" : "none"}}>
+          <h3>Properties</h3>
+          <div className="container">
+            {Object.keys(properties).map(key => (
+              <Property 
+                prop={properties[key]} 
+                url={url}
+                key={key}
+                needRefresh={needRefresh}
+                setNeedRefresh={setNeedRefresh}
+              />
+            ))}
+          </div>
+          <h3>Actions</h3>
+          <div className="container">
+            {Object.keys(actions).map(key => (
+              <Action
+                action={actions[key]}
+                url={url}
+                key={key}
+                needRefresh={needRefresh}
+                setNeedRefresh={setNeedRefresh}
+              />
+            ))}
+          </div>
         </div>
       </>
     )
