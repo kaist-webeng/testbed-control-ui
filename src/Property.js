@@ -27,11 +27,11 @@ function Property({ prop, url, needRefresh, setNeedRefresh }) {
         setValues(null);
         setIsLoading(true);
         setError(null);
-
+  
         // Bind the resource before retrieving properties.
         setStateUrl(url);
         const boundStatus = await bind({url: stateUrl});
-
+  
         if (!boundStatus) {
           const response = await axios({
             method: 'get',
@@ -39,7 +39,7 @@ function Property({ prop, url, needRefresh, setNeedRefresh }) {
             headers: { 'USER-ID': '7747' }
           });
           setValues(response.data);
-
+  
           await unbind({url: stateUrl});
         }
         else
@@ -48,11 +48,10 @@ function Property({ prop, url, needRefresh, setNeedRefresh }) {
         setError(e);
       }
       setIsLoading(false);
-    };
-
+    }
     fetchValues();
     setNeedRefresh(false);
-  }, [forms, url, stateUrl, needRefresh, setNeedRefresh]);
+  }, [needRefresh]);
 
   // Render the loaded data.
   if (isLoading)
