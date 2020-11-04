@@ -16,10 +16,12 @@ const Control = React.memo(function Control({ desc }) {
   if (title && url && description && properties && actions)
     return (
       <>
-        <h2 onClick={onClick}>{title}</h2>
-        <div className="desc-url-wrapper">
-          <p className="resource-desc">{description}</p>
-          <a href={url}>{url}</a>
+        <div className="headline">
+          <h2 onClick={onClick}>{title}</h2>
+          <div className="desc-url-wrapper">
+            <p className="resource-desc">{description}</p>
+            <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>
+          </div>
         </div>
         <div className="control-panel" id={id} style={{display: display ? "block" : "none"}}>
           <h3>Properties</h3>

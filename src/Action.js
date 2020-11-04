@@ -27,7 +27,7 @@ const InputElement = React.memo(function InputElement( { key, name, element, inp
             value={inputs[key]}
             min={element.minimum}
             max={element.maximum}
-            style={{width: "80%"}}
+            style={{width: "70%"}}
             onChange={handleChange}
           />
           {element.maximum}

@@ -51,6 +51,7 @@ function Property({ prop, url, needRefresh, setNeedRefresh }) {
     }
     fetchValues();
     setNeedRefresh(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [needRefresh]);
 
   // Render the loaded data.

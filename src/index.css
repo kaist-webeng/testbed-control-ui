@@ -1,3 +1,4 @@
+/* Give some responsiveness on the grid. */
 :root {
   --num-grid-columns: 3;
 }
@@ -8,6 +9,13 @@
   }
 }
 
+@media (max-width: 384px) {
+  :root {
+    --num-grid-columns: 1;
+  }
+}
+
+/* Main CSS & root level components. */
 body {
   max-width: 1024px;
   margin: 0 auto;
@@ -28,12 +36,17 @@ code {
 h2 {
   font-weight: 500;
   text-transform: capitalize;
-  margin-block-start: 0.5em;
-  margin-block-end: 0.1em;
+  margin: 0;
+  cursor: pointer;
+}
+
+h2:hover {
+  color: royalblue;
 }
 
 h3 {
   font-weight: 500;
+  margin: 0.4em auto;
 }
 
 h4 {
@@ -45,24 +58,6 @@ h4 {
 
 .center {
   text-align: center;
-}
-
-.container {
-  display: grid;
-  grid-template-columns: repeat(var(--num-grid-columns), 1fr);
-  grid-auto-rows: minmax(50px, auto);
-  justify-items: stretch;
-}
-
-.item {
-  border-radius: 3px;
-  box-shadow: 2px 2px 10px gray;
-  background-color: #fff;
-  margin: 10px 10px 10px 10px;
-  padding: 5px 5px 10px 10px;
-  display: flex;
-  align-items: left;
-  flex-direction: column;
 }
 
 .loading {
@@ -78,15 +73,32 @@ h4 {
   transform: translate(-50%, -50%);
 }
 
-input[type="submit"] {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-weight: 500;
-  padding: 0.5em 1.0em 0.5em 1.0em;
-  margin-top: 10px;
+/* Each IoT block and control panels. */
+section {
+  border-radius: 3px;
+  box-shadow: 2px 2px 10px gray;
+  background-color: #fff;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(var(--num-grid-columns), 1fr);
+  grid-auto-rows: minmax(50px, auto);
+  justify-items: stretch;
+}
+
+.item {
+  border-radius: 3px;
+  border: 1px solid darkgray;
+  /* box-shadow: 2px 2px 10px gray; */
+  background-color: #fff;
+  margin: 5px 5px 5px 5px;
+  padding: 5px 5px 10px 10px;
+  display: flex;
+  align-items: left;
+  flex-direction: column;
 }
 
 .resource-desc {
@@ -99,4 +111,39 @@ input[type="submit"] {
   align-items: center;
   justify-content: space-between;
   padding: 0.1em 0.2em 0.1em 0.2em;
+}
+
+/* Miscellaneous styles. */
+input[type="submit"] {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 500;
+  padding: 0.5em 1.0em 0.5em 1.0em;
+  margin-top: 10px;
+  border-radius: 3px;
+  border: 1px solid rgb(64, 64, 64);
+  background-color: #f5f5f5; 
+}
+
+input[type="submit"]:hover, input[type="submit"]:active {
+  border: 2px solid rgb(64, 64, 64);
+}
+
+a {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-word;
+}
+
+a:link, a:visited {
+  color: black;
+  font-size: 85%;
+}
+
+a:hover {
+  color: royalblue;
 }
