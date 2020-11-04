@@ -17,7 +17,7 @@ const Control = React.memo(function Control({ desc }) {
     return (
       <>
         <div className="headline">
-          <h2 onClick={onClick}>{title}</h2>
+          <h2 onClick={onClick}>{id}</h2>
           <div className="desc-url-wrapper">
             <p className="resource-desc">{description}</p>
             <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>
