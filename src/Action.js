@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useToasts } from 'react-toast-notifications';
 
 import { bind, unbind } from './Ownership';
 
@@ -57,6 +58,7 @@ const InputElement = React.memo(function InputElement( { key, name, element, inp
 function Action({ action, url, setNeedRefresh }) {
   const { title, description, input, forms } = action;
   const [inputs, setInputs] = useState({});
+  const { addToast } = useToasts();
 
   const onSubmit = event => {
     event.preventDefault();
@@ -71,7 +73,7 @@ function Action({ action, url, setNeedRefresh }) {
           form.append(key, inputs[key]);
         }
 
-        await axios({
+        const data = await axios({
           method: 'post',
           url: forms[0].href,
           headers: { 'USER-ID': '7747' },
@@ -79,11 +81,18 @@ function Action({ action, url, setNeedRefresh }) {
         });
 
         await unbind({url: url});
+
+        return data;
       }
     }
     
-    submitAction().then(() => {
-      setNeedRefresh(true);
+    submitAction().then(
+      (data) => {
+        setNeedRefresh(true);
+        addToast('The action has been successfully dispatched with the following data: ' +  JSON.stringify(data.data), { appearance: 'success', autoDismiss: false })
+      }, (error) => {
+        const { message, response: { data } } = error;
+        addToast(message + '\n' + JSON.stringify(data), { appearance: 'error', autoDismiss: false })
     });
   }
 

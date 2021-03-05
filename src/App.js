@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ToastProvider } from 'react-toast-notifications';
 
 import ControlArray from './ControlArray';
 
@@ -40,9 +41,9 @@ function App() {
 
   // Render the loaded data.
   return (
-    <body>
+    <ToastProvider>
       <ControlArray descriptions={descriptions} />
-    </body>
+    </ToastProvider>
   );
 }
 
