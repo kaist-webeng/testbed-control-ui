@@ -33,6 +33,20 @@ const InputElement = React.memo(function InputElement( { key, name, element, inp
           {element.maximum}
         </>
       );
+    case "string":
+      return (
+        <ul style={{textAlign: "left"}}>
+          <li>
+          <strong>{name} : </strong>
+          <input 
+            type="text"
+            id={name}
+            name={name}
+            onChange={handleChange}
+          />
+          </li>
+        </ul>
+      );
     default:
       return (
       <div style={{color: "red"}}>Sorry, this input type of "{type}" is not supported. Please add the support for this input type.</div>
