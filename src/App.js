@@ -1,14 +1,13 @@
 import React from 'react';
-import axios from 'axios';
 import useSWR from 'swr';
 import { ToastProvider } from 'react-toast-notifications';
 
 import ControlArray from './components/ControlArray';
+import { getFetcher } from './utils/fetcher';
 
 function App() {
-  const fetcher = url => axios.get(url).then(r => r.data);
   const { data, error } = useSWR(
-    'http://server.seiker.kr:8000/api/services', fetcher
+    'http://server.seiker.kr:8000/api/services', getFetcher
   );
 
   if (error)

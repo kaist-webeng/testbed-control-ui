@@ -1,29 +1,62 @@
 import React, { useState } from 'react';
+import useSWR from 'swr';
 
 import Property from './Property';
 import Action from './Action';
+import styles from "./ControlArray.module.css";
+import { getFetcher } from '../utils/fetcher';
+import { useToasts } from 'react-toast-notifications';
 
 const Control = React.memo(function Control({ desc }) {
-  const descObject = JSON.parse(desc);
-  const { id, title, url, description, properties, actions } = descObject;
+  const {
+    id,
+    title,
+    url,
+    description,
+    properties,
+    actions,
+  } = JSON.parse(desc);
+
   const [needRefresh, setNeedRefresh] = useState(false);
   const [display, setDisplay] = useState(false);
+  const { data, error } = useSWR(url, url => getFetcher(url, 1000));
+  const { addToast } = useToasts();
 
   const onClick = event => {
     setDisplay((prevDisplay) => !prevDisplay);
   };
 
+  const onErrorClick = () => {
+    addToast(
+      `You can't use the controller "${id}" because it doesn't respond.`,
+      { appearance: 'error', autoDismiss: false }
+    )
+  }
+
   if (title && url && description && properties && actions)
     return (
       <>
+        {/* Headline component */}
         <div className="headline">
-          <h2 onClick={onClick}>{id}</h2>
+          <span>
+            { error && 
+              <i className={`${styles.WarningIcon} ri-error-warning-fill`} /> 
+            }
+            <h2 
+              onClick={error ? onErrorClick : onClick} 
+              style={{display: "inline", color: error ? "red" : "black"}}
+            >
+              {id}
+            </h2>
+          </span>
           <div className="desc-url-wrapper">
             <p className="resource-desc">{description}</p>
             <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>
           </div>
         </div>
-        <div className="control-panel" id={id} style={{display: display ? "block" : "none"}}>
+        {/* Control panel component */}
+        { data && !error &&
+          <div className="control-panel" id={id} style={{display: display ? "block" : "none"}}>
           <h3>Properties</h3>
           <div className="container">
             {Object.keys(properties).map(key => (
@@ -49,13 +82,16 @@ const Control = React.memo(function Control({ desc }) {
             ))}
           </div>
         </div>
+        }
       </>
     )
 
   return (
-    <>
-      <h2 style={{color: "red"}}>Failed to parse the description.</h2>
-    </>
+    <h2 
+      style={{color: "red"}}
+    >
+      Failed to parse the description.
+    </h2>
   )
 });
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useToasts } from 'react-toast-notifications';
 
-import { bind, unbind } from './Ownership';
+import { bind, unbind } from '../api/Ownership';
 
 const InputElement = React.memo(function InputElement( { key, name, element, inputs, setInputs } ) {
   const { type } = element;
@@ -64,7 +64,7 @@ function Action({ action, url, setNeedRefresh }) {
     event.preventDefault();
 
     const submitAction = async () => {
-      const boundStatus = await bind({url: url});
+      const boundStatus = await bind(url);
 
       if (!boundStatus) {
         let form = new FormData();
@@ -80,7 +80,7 @@ function Action({ action, url, setNeedRefresh }) {
           data: form
         });
 
-        await unbind({url: url});
+        await unbind(url);
 
         return data;
       }
@@ -89,7 +89,7 @@ function Action({ action, url, setNeedRefresh }) {
     submitAction().then(
       (data) => {
         setNeedRefresh(true);
-        addToast('The action has been successfully dispatched with the following data: ' +  JSON.stringify(data.data), { appearance: 'success', autoDismiss: false })
+        addToast('The action has been successfully dispatched with the following data: ' +  JSON.stringify(data && (data.data ?? 'nothing')), { appearance: 'success', autoDismiss: false })
       }, (error) => {
         const { message, response: { data } } = error;
         addToast(message + '\n' + JSON.stringify(data), { appearance: 'error', autoDismiss: false })
