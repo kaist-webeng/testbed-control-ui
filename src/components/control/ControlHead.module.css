@@ -1,0 +1,36 @@
+.WarningIcon {
+  display: inline;
+  color: #c00;
+  font-size: 1.25em;
+  margin-right: 6px;
+}
+
+.Title {
+  display: inline;
+  font-weight: 500;
+  text-transform: capitalize;
+  margin: 0;
+  cursor: pointer;
+}
+
+.ErrorTitle {
+  color: red;
+  cursor: not-allowed;
+}
+
+.NormalTitle:hover {
+  color: royalblue;
+}
+
+
+.DescriptionWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.1em 0.2em 0.1em 0.2em;
+}
+
+.ResourceDescription {
+  margin: 0;
+  font-weight: 500;
+}

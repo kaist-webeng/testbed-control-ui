@@ -1,11 +1,17 @@
 import axios from 'axios';
 
-function bindFetcher(url, callback) {
-  bind(url).then(callback).catch(e => {
-    throw e;
-  });
-  unbind(url).then().catch(e => {
-    throw e;
+function checkBound(url) {
+  axios({
+    method: 'get',
+    url: url.concat('/user'),
+    timeout: 2000,
+  }).then(r => {
+    const info = r.data;
+
+    if (info.bound && info.userId === "7747")
+      return true;
+    else
+      return false;
   });
 }
 
@@ -42,4 +48,4 @@ async function unbind(url) {
   });
 }
 
-export { bindFetcher, bind, unbind };
+export { checkBound, bind, unbind };

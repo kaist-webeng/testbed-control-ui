@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useToasts } from 'react-toast-notifications';
 
-import { bind, unbind } from '../api/Ownership';
+import { checkBound, bind } from '../api/bindApi';
 
 const InputElement = React.memo(function InputElement( { key, name, element, inputs, setInputs } ) {
   const { type } = element;
@@ -50,7 +50,10 @@ const InputElement = React.memo(function InputElement( { key, name, element, inp
       );
     default:
       return (
-      <div style={{color: "red"}}>Sorry, this input type of "{type}" is not supported. Please add the support for this input type.</div>
+      <div style={{color: "red"}}>
+        Sorry, this input type of "{type}" is not supported. 
+        Please add the support for this input type.
+      </div>
       );
   }
 });
@@ -64,35 +67,42 @@ function Action({ action, url, setNeedRefresh }) {
     event.preventDefault();
 
     const submitAction = async () => {
-      const boundStatus = await bind(url);
+      if (!checkBound(url))
+        await bind(url);
 
-      if (!boundStatus) {
-        let form = new FormData();
+      let form = new FormData();
 
-        for (let key in inputs) {
-          form.append(key, inputs[key]);
-        }
-
-        const data = await axios({
-          method: 'post',
-          url: forms[0].href,
-          headers: { 'USER-ID': '7747' },
-          data: form
-        });
-
-        await unbind(url);
-
-        return data;
+      for (let key in inputs) {
+        form.append(key, inputs[key]);
       }
+
+      const response = await axios({
+        method: 'post',
+        url: forms[0].href,
+        headers: { 'USER-ID': '7747' },
+        data: form
+      });
+
+      return response;
     }
     
-    submitAction().then(
-      (data) => {
-        setNeedRefresh(true);
-        addToast('The action has been successfully dispatched with the following data: ' +  JSON.stringify(data && (data.data ?? 'nothing')), { appearance: 'success', autoDismiss: false })
-      }, (error) => {
-        const { message, response: { data } } = error;
-        addToast(message + '\n' + JSON.stringify(data), { appearance: 'error', autoDismiss: false })
+    submitAction().then(r => {
+      console.log('action submit');
+      setNeedRefresh();
+      const returnString = JSON.stringify(r && (r.data ?? 'nothing'));
+      addToast(
+        `The action has been successfully dispatched with\
+        the following data: ${returnString}`, 
+        { 
+          appearance: 'success', 
+          autoDismiss: false, 
+        }
+      );
+    }, error => {
+      addToast(
+        JSON.stringify(error), 
+        { appearance: 'error', autoDismiss: false }
+      );
     });
   }
 

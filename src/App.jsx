@@ -4,6 +4,7 @@ import { ToastProvider } from 'react-toast-notifications';
 
 import ControlArray from './components/ControlArray';
 import { getFetcher } from './utils/fetcher';
+import styles from './App.module.css';
 
 function App() {
   const { data, error } = useSWR(
@@ -12,19 +13,14 @@ function App() {
 
   if (error)
     return (
-      <div 
-        className="loading vertical-center" 
-        style={{color: "red"}}
-      >
+      <div className={styles.Loading} style={{color: "red"}}>
         Failed to retrieve descriptions.
       </div>
     );
 
   if (!data)
     return (
-      <div 
-        className="loading vertical-center"
-      >
+      <div className={styles.Loading}>
         Loading descriptions...
       </div>
     );
