@@ -1,9 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
+import axios from 'axios';
+import { useToasts } from 'react-toast-notifications';
 
 import Property from '../Property';
 import Action from '../Action';
 import styles from './ControlPanel.module.css';
-import { unbind } from '../../api/bindApi';
+import { bind, checkBound, unbind } from '../../api/bindApi';
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'SET_DATA':
+      return {
+        ...state,
+        [action.key]: {
+          ...state[action.key],
+          data: action.data
+        }
+      };
+    default:
+      return state;
+  }
+}
 
 function ControlPanel({
   id,
@@ -12,12 +29,43 @@ function ControlPanel({
   actions,
   isPanelVisible,
 }) {
-  
-  const [needRefresh, setNeedRefresh] = useState(Object.keys(props).length);
+  const { addToast } = useToasts();
+  const [needRefresh, setNeedRefresh] = useState(true);
+  const [propData, dispatch] = useReducer(reducer, props);
   useEffect(() => {
-    console.log(`panel value ${needRefresh}`);
-    if (needRefresh < 0)
-      unbind(url).then();
+    const fetchValues = async (key, endpoint) => {
+      if (!checkBound(url))
+        await bind(url);
+      
+      const response = await axios({
+        method: 'get',
+        url: endpoint,
+        headers: { 'USER-ID': '7747' },
+      });
+
+      return response.data;
+    };
+
+    const fetchAll = async () => {
+      const fetchResult = await Promise.all(
+        Object.keys(propData).map(key => {
+          const endpoint = propData[key].forms[0].href;
+          return fetchValues(key, endpoint).then(data => dispatch({
+            type: 'SET_DATA',
+            key,
+            data,
+          }), error => addToast(
+            JSON.stringify(error.message), 
+            { appearance: 'error', autoDismiss: true }
+          ));
+        })
+      );
+      return fetchResult;
+    };
+
+    fetchAll().then(() => unbind(url));
+    setNeedRefresh(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [needRefresh]);
 
   return (
@@ -29,13 +77,9 @@ function ControlPanel({
       <div className={styles.Container}>
         {Object.keys(props).map(key => (
           <Property 
-            prop={props[key]} 
-            url={url}
-            key={key}
+            prop={propData[key]}
             needRefresh={needRefresh}
-            setNeedRefresh={() =>
-              setNeedRefresh(prev => prev - 1)
-            }
+            key={key}
           />
         ))}
       </div>
@@ -45,11 +89,8 @@ function ControlPanel({
           <Action
             action={actions[key]}
             url={url}
+            setNeedRefresh={setNeedRefresh}
             key={key}
-            needRefresh={needRefresh}
-            setNeedRefresh={() => 
-              setNeedRefresh(Object.keys(props).length)
-            }
           />
         ))}
       </div>

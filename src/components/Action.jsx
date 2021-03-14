@@ -4,7 +4,7 @@ import { useToasts } from 'react-toast-notifications';
 
 import { checkBound, bind } from '../api/bindApi';
 
-const InputElement = React.memo(function InputElement( { key, name, element, inputs, setInputs } ) {
+const InputElement = React.memo(function InputElement( { name, element, inputs, setInputs } ) {
   const { type } = element;
 
   const handleChange = event => {
@@ -25,7 +25,7 @@ const InputElement = React.memo(function InputElement( { key, name, element, inp
             type="range"
             id={name}
             name={name}
-            value={inputs[key]}
+            value={inputs[name]}
             min={element.minimum}
             max={element.maximum}
             style={{width: "70%"}}
@@ -87,7 +87,6 @@ function Action({ action, url, setNeedRefresh }) {
     }
     
     submitAction().then(r => {
-      console.log('action submit');
       setNeedRefresh();
       const returnString = JSON.stringify(r && (r.data ?? 'nothing'));
       addToast(

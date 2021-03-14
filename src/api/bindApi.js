@@ -1,5 +1,14 @@
 import axios from 'axios';
 
+
+/*
+ * function checkBound(url)
+ * @param url: the endpoint url of target resource
+ * @return: true if bound, false otherwise.
+ * 
+ * This function checks if the target resource is bound by
+ * the control UI.
+ */
 function checkBound(url) {
   axios({
     method: 'get',
@@ -16,9 +25,9 @@ function checkBound(url) {
 }
 
 /*
- * async function bind({ url })
+ * function bind(url)
  * @param url: the endpoint url of target resource
- * @return: 0 if success, 1 if failed, -1 otherwise.
+ * @return: an AxiosResponse object
  * 
  * This function attempts to bind the resource of given url.
  * The resource should be unbound after use.
@@ -33,9 +42,9 @@ async function bind(url) {
 }
 
 /*
- * async function unbind({ url })
+ * function unbind(url)
  * @param url: the endpoint url of target resource
- * @return: 0 if success, -1 otherwise.
+ * @return: an AxiosResponse object
  * 
  * This function attempts to unbind the resource of given url.
  */
