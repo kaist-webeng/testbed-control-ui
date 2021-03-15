@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import axios from 'axios';
 import { useToasts } from 'react-toast-notifications';
 
@@ -9,6 +9,16 @@ import { bind, checkBound, unbind } from '../../api/bindApi';
 
 function reducer(state, action) {
   switch (action.type) {
+    case 'SET_NEED_REFRESH':
+      return {
+        ...state,
+        needRefresh: true,
+      };
+    case 'UNSET_NEED_REFRESH':
+      return {
+        ...state,
+        needRefresh: false,
+      };
     case 'SET_DATA':
       return {
         ...state,
@@ -30,8 +40,10 @@ function ControlPanel({
   isPanelVisible,
 }) {
   const { addToast } = useToasts();
-  const [needRefresh, setNeedRefresh] = useState(true);
-  const [propData, dispatch] = useReducer(reducer, props);
+  const [propData, dispatch] = useReducer(reducer, {
+    ...props,
+    needRefresh: true,
+  });
   useEffect(() => {
     const fetchValues = async (key, endpoint) => {
       if (!checkBound(url))
@@ -49,6 +61,12 @@ function ControlPanel({
     const fetchAll = async () => {
       const fetchResult = await Promise.all(
         Object.keys(propData).map(key => {
+          // if key is needRefresh then just throw an empty Promise
+          if (key === 'needRefresh')
+            return new Promise((resolve) => {
+              resolve();
+            });
+          
           const endpoint = propData[key].forms[0].href;
           return fetchValues(key, endpoint).then(data => dispatch({
             type: 'SET_DATA',
@@ -63,10 +81,14 @@ function ControlPanel({
       return fetchResult;
     };
 
-    fetchAll().then(() => unbind(url));
-    setNeedRefresh(false);
+    if (propData.needRefresh) {
+      fetchAll().then(() => unbind(url));
+      dispatch({
+        type: 'UNSET_NEED_REFRESH'
+      });
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [needRefresh]);
+  }, [propData.needRefresh]);
 
   return (
     <div 
@@ -78,7 +100,7 @@ function ControlPanel({
         {Object.keys(props).map(key => (
           <Property 
             prop={propData[key]}
-            needRefresh={needRefresh}
+            needRefresh={propData.needRefresh}
             key={key}
           />
         ))}
@@ -89,7 +111,9 @@ function ControlPanel({
           <Action
             action={actions[key]}
             url={url}
-            setNeedRefresh={setNeedRefresh}
+            setNeedRefresh={() => dispatch({
+              type: 'SET_NEED_REFRESH'
+            })}
             key={key}
           />
         ))}
