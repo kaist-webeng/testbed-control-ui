@@ -2,7 +2,7 @@ import React, { useEffect, useReducer } from 'react';
 import { useToasts } from 'react-toast-notifications';
 
 import Property from '../Property';
-import Action from '../Action';
+import Action from '../action/Action';
 import styles from './ControlPanel.module.css';
 import { unbind } from '../../api/bindApi';
 import { reducer, fetchAll } from '../../utils/panelFunctions';

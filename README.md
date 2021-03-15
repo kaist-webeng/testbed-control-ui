@@ -25,7 +25,7 @@ After the app is successfully built, run `serve -s -l PORT ./build/` to serve th
 
 ## Further Update
 
-### `src/Actions.js`
+### `src/components/action/ActionInputElement.js`
 
 Currently, integer inputs are only supported by this app.<br />
 Further support for [other input types](https://w3c.github.io/wot-thing-description/#sec-data-schema-vocabulary-definition) can be made by extending cases for them.

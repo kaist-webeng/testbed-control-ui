@@ -1,18 +1,8 @@
 import React from 'react';
 
-function PropertyElement({ element, value }) {
-  return (
-    <li>
-      <b>{element}</b>
-      <div>{value ?? 'This property is missing.'}</div>
-    </li>
-  )
-}
-
 function Property({ prop, needRefresh }) {
   const { title, description, properties, data } = prop;
 
-  // Render the loaded data.
   if (needRefresh)
     return (
       <div className="item center">
@@ -26,11 +16,10 @@ function Property({ prop, needRefresh }) {
       <div>{description}</div>
       <ul>{
         data && Object.keys(properties).map(key => (
-          <PropertyElement 
-            element={key} 
-            value={data[key]}
-            key={key} 
-          />
+          <li key={key}>
+            <b>{key}</b>
+            <div>{data[key] ?? 'This property is missing.'}</div>
+          </li>
         ))
       }</ul>
     </div>
